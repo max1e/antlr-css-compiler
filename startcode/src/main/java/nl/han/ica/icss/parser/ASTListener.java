@@ -203,35 +203,27 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 	@Override
-	public void enterMultiplyOperation(ICSSParser.MultiplyOperationContext ctx) {
-		currentContainer.push(new MultiplyOperation());
+	public void enterExpression(ICSSParser.ExpressionContext ctx) {
+		Expression expression = null;
+		if (ctx.getChildCount() == 3) {
+			if (ctx.getChild(1).getText().equals("*")) {
+				expression = new MultiplyOperation();
+			}
+			if (ctx.getChild(1).getText().equals("+")) {
+				expression = new AddOperation();
+			}
+			if (ctx.getChild(1).getText().equals("-")) {
+				expression = new SubtractOperation();
+			}
+			currentContainer.push(expression);
+		}
 	}
 
 	@Override
-	public void exitMultiplyOperation(ICSSParser.MultiplyOperationContext ctx) {
-		var multiplyOperation = currentContainer.pop();
-		currentContainer.peek().addChild(multiplyOperation);
-	}
-
-	@Override
-	public void enterAddOperation(ICSSParser.AddOperationContext ctx) {
-		currentContainer.push(new AddOperation());
-	}
-
-	@Override
-	public void exitAddOperation(ICSSParser.AddOperationContext ctx) {
-		var addOperation = currentContainer.pop();
-		currentContainer.peek().addChild(addOperation);
-	}
-
-	@Override
-	public void enterSubtractOperation(ICSSParser.SubtractOperationContext ctx) {
-		currentContainer.push(new SubtractOperation());
-	}
-
-	@Override
-	public void exitSubtractOperation(ICSSParser.SubtractOperationContext ctx) {
-		var subtractOperation = currentContainer.pop();
-		currentContainer.peek().addChild(subtractOperation);
+	public void exitExpression(ICSSParser.ExpressionContext ctx) {
+		if (ctx.getChildCount() == 3) {
+			var expression = currentContainer.pop();
+			currentContainer.peek().addChild(expression);
+		}
 	}
 }

@@ -29,7 +29,14 @@ ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE OPEN_BRACE dec
 elseClause: ELSE OPEN_BRACE declarationBlock CLOSE_BRACE;
 
 // Expressions
-expression: literal | variableReference | operation;
+expression: expression MUL expression |
+            expression (PLUS | MIN) expression |
+            variableReference |
+            literal;
+
+operation: multiplyOperation | addSubstractOperation;
+multiplyOperation: (variableReference | literal) MUL expression;
+addSubstractOperation: expression (PLUS | MIN) expression;
 
 // Low level
 selector: idSelector | classSelector | tagSelector;
@@ -43,11 +50,6 @@ colorLiteral: COLOR;
 percentageLiteral: PERCENTAGE;
 pixelLiteral: PIXELSIZE;
 scalarLiteral: SCALAR;
-
-operation: multiplyOperation | addOperation | subtractOperation;
-multiplyOperation: (variableReference | literal) MUL expression;
-addOperation: (variableReference | literal) PLUS expression;
-subtractOperation: (variableReference | literal) MIN expression;
 
 
 //--- LEXER: ---
