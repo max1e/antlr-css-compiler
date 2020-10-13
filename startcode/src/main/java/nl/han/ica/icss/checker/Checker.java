@@ -1,11 +1,13 @@
 package nl.han.ica.icss.checker;
 
 import nl.han.ica.icss.ast.*;
+import nl.han.ica.icss.ast.operations.AddOperation;
+import nl.han.ica.icss.ast.operations.MultiplyOperation;
+import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-
 
 public class Checker {
 
@@ -50,11 +52,34 @@ public class Checker {
         var lhsType = getExpressionType(node.lhs);
         var rhsType = getExpressionType(node.rhs);
 
-        if (lhsType != rhsType) {
-            node.setError("Operation types do not match");
+        if (node instanceof MultiplyOperation) {
+            checkMultiplyOperation(node, lhsType, rhsType);
+        }
+        else if (node instanceof AddOperation || node instanceof SubtractOperation) {
+            checkAddSubtractOperation(node, lhsType, rhsType);
+        }
+        else {
+            throw new UnexpectedSyntaxException();
         }
 
-        return lhsType;
+        if (lhsType == ExpressionType.COLOR || rhsType == ExpressionType.COLOR) {
+            node.setError("Colors can not be used in operations");
+        }
+
+        return lhsType != ExpressionType.SCALAR ? lhsType : rhsType;
+    }
+
+    private void checkMultiplyOperation(Operation node, ExpressionType lhsType, ExpressionType rhsType) {
+        if (lhsType != ExpressionType.SCALAR && rhsType != ExpressionType.SCALAR) {
+            node.setError("Multiply operations must have at least one operand of scalar type");
+        }
+
+    }
+
+    private void checkAddSubtractOperation(Operation node, ExpressionType lhsType, ExpressionType rhsType) {
+        if (lhsType != rhsType) {
+            node.setError("Add and subtract operations must have operands of equal types");
+        }
     }
 
     private void checkStylerule(Stylerule node) {
@@ -62,6 +87,11 @@ public class Checker {
     }
 
     private void checkIfClause(IfClause node) {
+
+        if (getExpressionType(node.conditionalExpression) != ExpressionType.BOOL) {
+            node.setError("If statements require a conditional expression of type boolean");
+        }
+
         checkDeclarationBlock(node);
 
         if (node.elseClause != null) {
@@ -73,10 +103,10 @@ public class Checker {
         checkDeclarationBlock(node);
     }
 
-    private void checkDeclarationBlock(ASTNode declarationBlockNode) {
+    private void checkDeclarationBlock(ASTNode node) {
         variableTypes.addFirst(new HashMap<>());
 
-        for (ASTNode child : declarationBlockNode.getChildren()) {
+        for (ASTNode child : node.getChildren()) {
             if (child instanceof IfClause) {
                 checkIfClause((IfClause) child);
             }

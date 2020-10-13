@@ -6,7 +6,6 @@ grammar ICSS;
  * Een declarationBlock mag leeg zijn
  * Variable assignments kunnen overal in de styelesheet
  *
- * if statements werken nu alleen met puur een variable name
  * Een if en else moeten brackets hebben, dus geen else if () {}
  *
  */
@@ -25,7 +24,7 @@ declaration: propertyName COLON expression SEMICOLON;
 propertyName: LOWER_IDENT;
 
 // If else
-ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE OPEN_BRACE declarationBlock CLOSE_BRACE elseClause?;
+ifClause: IF BOX_BRACKET_OPEN expression BOX_BRACKET_CLOSE OPEN_BRACE declarationBlock CLOSE_BRACE elseClause?;
 elseClause: ELSE OPEN_BRACE declarationBlock CLOSE_BRACE;
 
 // Expressions
