@@ -204,26 +204,26 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void enterExpression(ICSSParser.ExpressionContext ctx) {
-		Expression expression = null;
 		if (ctx.getChildCount() == 3) {
+			Operation operation = null;
 			if (ctx.getChild(1).getText().equals("*")) {
-				expression = new MultiplyOperation();
+				operation = new MultiplyOperation();
 			}
 			if (ctx.getChild(1).getText().equals("+")) {
-				expression = new AddOperation();
+				operation = new AddOperation();
 			}
 			if (ctx.getChild(1).getText().equals("-")) {
-				expression = new SubtractOperation();
+				operation = new SubtractOperation();
 			}
-			currentContainer.push(expression);
+			currentContainer.push(operation);
 		}
 	}
 
 	@Override
 	public void exitExpression(ICSSParser.ExpressionContext ctx) {
 		if (ctx.getChildCount() == 3) {
-			var expression = currentContainer.pop();
-			currentContainer.peek().addChild(expression);
+			var operation = currentContainer.pop();
+			currentContainer.peek().addChild(operation);
 		}
 	}
 }
