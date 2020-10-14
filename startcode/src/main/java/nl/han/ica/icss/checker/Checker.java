@@ -5,6 +5,7 @@ import nl.han.ica.icss.ast.operations.AddOperation;
 import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.types.ExpressionType;
+import nl.han.ica.icss.checker.exceptions.UnexpectedSyntaxException;
 
 import java.util.HashMap;
 import java.util.LinkedList;
