@@ -27,7 +27,7 @@ public class EvalExpressions implements Transform {
         transformStylesheet(ast.root);
     }
 
-    private void transformStylesheet(ASTNode node) {
+    private void transformStylesheet(Stylesheet node) {
         variableValues.addFirst(new HashMap<>());
 
         LinkedList<VariableAssignment> childrenToDelete = new LinkedList<>();
