@@ -11,7 +11,10 @@ public class RemoveIf implements Transform {
 
     @Override
     public void apply(AST ast) {
-
+        transformStylesheet(ast.root);
     }
-    
+
+    private void transformStylesheet(Stylesheet node) {
+        
+    }
 }

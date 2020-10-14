@@ -65,6 +65,9 @@ public class Checker {
         if (lhsType == ExpressionType.COLOR || rhsType == ExpressionType.COLOR) {
             node.setError("Colors can not be used in operations");
         }
+        else if (lhsType == ExpressionType.BOOL || rhsType == ExpressionType.BOOL) {
+            node.setError("Booleans can not be used in operations");
+        }
 
         return lhsType != ExpressionType.SCALAR ? lhsType : rhsType;
     }
@@ -73,7 +76,6 @@ public class Checker {
         if (lhsType != ExpressionType.SCALAR && rhsType != ExpressionType.SCALAR) {
             node.setError("Multiply operations must have at least one operand of scalar type");
         }
-
     }
 
     private void checkAddSubtractOperation(Operation node, ExpressionType lhsType, ExpressionType rhsType) {
@@ -94,8 +96,8 @@ public class Checker {
 
         checkDeclarationBlock(node);
 
-        if (node.elseClause != null) {
-            checkElseClause(node.elseClause);
+        if (node.getElseClause() != null) {
+            checkElseClause(node.getElseClause());
         }
     }
 
@@ -179,16 +181,11 @@ public class Checker {
      * Returnt het type van een variabele en returnt UNDEFINED als de variabele buiten de scope ligt
      * */
     private ExpressionType getVariableType(String variableName) {
-        var variableType = ExpressionType.UNDEFINED;
-
         for (var variableTypeCollection : variableTypes) {
-            for (var j = 0; j < variableTypeCollection.size(); j++) {
-                if (variableTypeCollection.containsKey(variableName)) {
-                    variableType = variableTypeCollection.get(variableName);
-                }
+            if (variableTypeCollection.containsKey(variableName)) {
+                return variableTypeCollection.get(variableName);
             }
         }
-
-        return variableType;
+        return ExpressionType.UNDEFINED;
     }
 }
