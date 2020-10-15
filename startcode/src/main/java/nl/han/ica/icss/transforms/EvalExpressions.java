@@ -168,6 +168,7 @@ public class EvalExpressions implements Transform {
                         throw new InvalidLiteralTypeException();
                         // break; // wordt intellij onrustig van
                 }
+                break;
             case "Subtract":
                 switch (literalType) {
                     case PIXEL:
