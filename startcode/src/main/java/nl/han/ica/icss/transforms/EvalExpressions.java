@@ -140,42 +140,47 @@ public class EvalExpressions implements Transform {
         int total;
         switch (operationType) {
             case "Multiply":
-                if (literalType == ExpressionType.PIXEL) {
-                    total = ((PixelLiteral) lhsValue).value * ((PixelLiteral) rhsValue).value;
-                    result = new PixelLiteral(total);
-                }
-                else if (literalType == ExpressionType.PERCENTAGE) {
-                    total = ((PercentageLiteral) lhsValue).value * ((PercentageLiteral) rhsValue).value;
-                    result = new PercentageLiteral(total);
-                }
-                else {
-                    throw new InvalidLiteralTypeException();
+                switch (literalType) {
+                    case PIXEL:
+                        total = ((PixelLiteral) lhsValue).value * ((PixelLiteral) rhsValue).value;
+                        result = new PixelLiteral(total);
+                        break;
+                    case PERCENTAGE:
+                        total = ((PercentageLiteral) lhsValue).value * ((PercentageLiteral) rhsValue).value;
+                        result = new PercentageLiteral(total);
+                        break;
+                    default:
+                        throw new InvalidLiteralTypeException();
+                        // break; // wordt intellij onrustig van
                 }
                 break;
             case "Add":
-                if (literalType == ExpressionType.PIXEL) {
-                    total = ((PixelLiteral) lhsValue).value + ((PixelLiteral) rhsValue).value;
-                    result = new PixelLiteral(total);
+                switch (literalType) {
+                    case PIXEL:
+                        total = ((PixelLiteral) lhsValue).value + ((PixelLiteral) rhsValue).value;
+                        result = new PixelLiteral(total);
+                        break;
+                    case PERCENTAGE:
+                        total = ((PercentageLiteral) lhsValue).value + ((PercentageLiteral) rhsValue).value;
+                        result = new PercentageLiteral(total);
+                        break;
+                    default:
+                        throw new InvalidLiteralTypeException();
+                        // break; // wordt intellij onrustig van
                 }
-                else if (literalType == ExpressionType.PERCENTAGE) {
-                    total = ((PercentageLiteral) lhsValue).value + ((PercentageLiteral) rhsValue).value;
-                    result = new PercentageLiteral(total);
-                }
-                else {
-                    throw new InvalidLiteralTypeException();
-                }
-                break;
             case "Subtract":
-                if (literalType == ExpressionType.PIXEL) {
-                    total = ((PixelLiteral) lhsValue).value - ((PixelLiteral) rhsValue).value;
-                    result = new PixelLiteral(total);
-                }
-                else if (literalType == ExpressionType.PERCENTAGE) {
-                    total = ((PercentageLiteral) lhsValue).value - ((PercentageLiteral) rhsValue).value;
-                    result = new PercentageLiteral(total);
-                }
-                else {
-                    throw new InvalidLiteralTypeException();
+                switch (literalType) {
+                    case PIXEL:
+                        total = ((PixelLiteral) lhsValue).value - ((PixelLiteral) rhsValue).value;
+                        result = new PixelLiteral(total);
+                        break;
+                    case PERCENTAGE:
+                        total = ((PercentageLiteral) lhsValue).value - ((PercentageLiteral) rhsValue).value;
+                        result = new PercentageLiteral(total);
+                        break;
+                    default:
+                        throw new InvalidLiteralTypeException();
+                        // break; // wordt intellij onrustig van
                 }
                 break;
             default:
