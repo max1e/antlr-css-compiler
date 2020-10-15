@@ -1,10 +1,11 @@
 package nl.han.ica.icss.generator;
 
 
-import nl.han.ica.icss.ast.AST;
-import nl.han.ica.icss.ast.Declaration;
-import nl.han.ica.icss.ast.Stylerule;
-import nl.han.ica.icss.ast.Stylesheet;
+import nl.han.ica.icss.ast.*;
+import nl.han.ica.icss.ast.literals.ColorLiteral;
+import nl.han.ica.icss.ast.literals.PercentageLiteral;
+import nl.han.ica.icss.ast.literals.PixelLiteral;
+import nl.han.ica.icss.transforms.exceptions.InvalidLiteralTypeException;
 
 public class Generator {
 
@@ -46,7 +47,24 @@ public class Generator {
 		stringBuilder.append(node.property.name);
 		stringBuilder.append(": ");
 
-		stringBuilder.append(node.expression);
+		generateExpression(node.expression);
 		stringBuilder.append("; \n");
+	}
+
+	private void generateExpression(Expression node) {
+		if (node instanceof ColorLiteral) {
+			stringBuilder.append(((ColorLiteral) node).value);
+		}
+		else if (node instanceof PixelLiteral) {
+			stringBuilder.append(((PixelLiteral) node).value);
+			stringBuilder.append("px");
+		}
+		else if (node instanceof PercentageLiteral) {
+			stringBuilder.append(((PercentageLiteral) node).value);
+			stringBuilder.append("%");
+		}
+		else {
+			throw new InvalidLiteralTypeException();
+		}
 	}
 }
