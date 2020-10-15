@@ -124,6 +124,11 @@ public class EvalExpressions implements Transform {
         throw new VariableNotDefinedException(node.name);
     }
 
+    /*
+     * Ik had dit liever met polymorfie opgelost, nu heb ik veel duplicate code.
+     * Ik heb dit niet veranderd in de startcode omdat ik niet dacht dat dat binnen de
+     * scope van deze opdracht lag
+     */
     private Literal transformOperation(Operation node) {
         Literal result;
 
