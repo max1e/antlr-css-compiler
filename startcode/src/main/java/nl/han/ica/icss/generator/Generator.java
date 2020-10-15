@@ -15,25 +15,38 @@ public class Generator {
 	}
 
 	public String generate(AST ast) {
-		return generateStylesheet(ast.root);
+		generateStylesheet(ast.root);
+		return stringBuilder.toString();
 	}
 
-	private String generateStylesheet(Stylesheet node) {
+	private void generateStylesheet(Stylesheet node) {
 		for (var child : node.getChildren()) {
+			if (child instanceof Stylerule) {
+				generateStylerule((Stylerule) child);
+			}
+		}
+	}
+
+	private void generateStylerule(Stylerule node) {
+		stringBuilder.append(node.selectors.get(0));
+		stringBuilder.append(" {");
+		stringBuilder.append("\n");
+
+		for (var child : node.getChildren()) {
+			if (child instanceof Declaration) {
+				generateDeclaration((Declaration) child);
+			}
 		}
 
-		return "";
+		stringBuilder.append("}\n\n");
 	}
 
-	private String generateStylerule(Stylerule node) {
+	private void generateDeclaration(Declaration node) {
+		stringBuilder.append("  ");
+		stringBuilder.append(node.property.name);
+		stringBuilder.append(": ");
 
-		return "";
+		stringBuilder.append(node.expression);
+		stringBuilder.append("; \n");
 	}
-
-	private String generateDeclaration(Declaration node) {
-
-		return "";
-	}
-
-	
 }
