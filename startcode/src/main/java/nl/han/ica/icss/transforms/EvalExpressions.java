@@ -127,7 +127,8 @@ public class EvalExpressions implements Transform {
     /*
      * Ik had dit liever met polymorfie opgelost, nu heb ik veel duplicate code.
      * Ik heb dit niet veranderd in de startcode omdat ik niet dacht dat dat binnen de
-     * scope van deze opdracht lag
+     * scope van deze opdracht lag en ik bang ben code te veranderen aangezien ik het niet
+     * zelf heb geschreven.
      */
     private Literal transformOperation(Operation node) {
         Literal result;
