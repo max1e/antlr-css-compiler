@@ -125,100 +125,58 @@ public class EvalExpressions implements Transform {
     }
 
     private Literal transformOperation(Operation node) {
-        Literal operationResult;
+        Literal result;
+
         var operationType = node.getNodeLabel();
 
+        var lhsValue = transformExpression(node.lhs);
+        var rhsValue = transformExpression(node.rhs);
+
+        var literalType = lhsValue.getType() != ExpressionType.SCALAR ? lhsValue.getType() : rhsValue.getType();
+
+        int total;
         switch (operationType) {
             case "Multiply":
-                operationResult = transformMultiplyOperation((MultiplyOperation) node);
+                if (literalType == ExpressionType.PIXEL) {
+                    total = ((PixelLiteral) lhsValue).value * ((PixelLiteral) rhsValue).value;
+                    result = new PixelLiteral(total);
+                }
+                else if (literalType == ExpressionType.PERCENTAGE) {
+                    total = ((PercentageLiteral) lhsValue).value * ((PercentageLiteral) rhsValue).value;
+                    result = new PercentageLiteral(total);
+                }
+                else {
+                    throw new InvalidLiteralTypeException();
+                }
                 break;
             case "Add":
-                operationResult = transformAddOperation((AddOperation) node);
+                if (literalType == ExpressionType.PIXEL) {
+                    total = ((PixelLiteral) lhsValue).value + ((PixelLiteral) rhsValue).value;
+                    result = new PixelLiteral(total);
+                }
+                else if (literalType == ExpressionType.PERCENTAGE) {
+                    total = ((PercentageLiteral) lhsValue).value + ((PercentageLiteral) rhsValue).value;
+                    result = new PercentageLiteral(total);
+                }
+                else {
+                    throw new InvalidLiteralTypeException();
+                }
                 break;
             case "Subtract":
-                operationResult = transformSubtractOperation((SubtractOperation) node);
+                if (literalType == ExpressionType.PIXEL) {
+                    total = ((PixelLiteral) lhsValue).value - ((PixelLiteral) rhsValue).value;
+                    result = new PixelLiteral(total);
+                }
+                else if (literalType == ExpressionType.PERCENTAGE) {
+                    total = ((PercentageLiteral) lhsValue).value - ((PercentageLiteral) rhsValue).value;
+                    result = new PercentageLiteral(total);
+                }
+                else {
+                    throw new InvalidLiteralTypeException();
+                }
                 break;
             default:
                 throw new NoSuchOperationTypeException();
-                // break; // wordt intellij onrustig van
-        }
-
-        return operationResult;
-    }
-
-    /* Was mooier geweest met een generic op literal zodat value in literal zit
-     * en wieweet met calculation methoden in de operations zodat de operation methoden 1 methode hadden kunnen zijn
-     * maar ik moest daar eng veel startcode voor aanpassen dus besloot ik dat het buiten de scope van dit project moest liggen
-     */
-    private Literal transformMultiplyOperation(MultiplyOperation node) {
-        var lhsValue = transformExpression(node.lhs);
-        var rhsValue = transformExpression(node.rhs);
-
-        var operationType = lhsValue.getType() != ExpressionType.SCALAR ? lhsValue.getType() : rhsValue.getType();
-
-        Literal result;
-        int total;
-        switch (operationType) {
-            case PIXEL:
-                total = ((PixelLiteral) lhsValue).value * ((PixelLiteral) rhsValue).value;
-                result = new PixelLiteral(total);
-                break;
-            case PERCENTAGE:
-                total = ((PercentageLiteral) lhsValue).value * ((PercentageLiteral) rhsValue).value;
-                result = new PercentageLiteral(total);
-                break;
-            default:
-                throw new InvalidLiteralTypeException();
-                // break; // wordt intellij onrustig van
-        }
-
-        return result;
-    }
-
-    private Literal transformAddOperation(AddOperation node) {
-        var lhsValue = transformExpression(node.lhs);
-        var rhsValue = transformExpression(node.rhs);
-
-        var operationType = lhsValue.getType();
-
-        Literal result;
-        int total;
-        switch (operationType) {
-            case PIXEL:
-                total = ((PixelLiteral) lhsValue).value + ((PixelLiteral) rhsValue).value;
-                result = new PixelLiteral(total);
-                break;
-            case PERCENTAGE:
-                total = ((PercentageLiteral) lhsValue).value + ((PercentageLiteral) rhsValue).value;
-                result = new PercentageLiteral(total);
-                break;
-            default:
-                throw new InvalidLiteralTypeException();
-                // break; // wordt intellij onrustig van
-        }
-
-        return result;
-    }
-
-    private Literal transformSubtractOperation(SubtractOperation node) {
-        var lhsValue = transformExpression(node.lhs);
-        var rhsValue = transformExpression(node.rhs);
-
-        var operationType = lhsValue.getType();
-
-        Literal result;
-        int total;
-        switch (operationType) {
-            case PIXEL:
-                total = ((PixelLiteral) lhsValue).value - ((PixelLiteral) rhsValue).value;
-                result = new PixelLiteral(total);
-                break;
-            case PERCENTAGE:
-                total = ((PercentageLiteral) lhsValue).value - ((PercentageLiteral) rhsValue).value;
-                result = new PercentageLiteral(total);
-                break;
-            default:
-                throw new InvalidLiteralTypeException();
                 // break; // wordt intellij onrustig van
         }
 
